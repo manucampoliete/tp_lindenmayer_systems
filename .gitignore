@@ -20,3 +20,5 @@ pom.xml.asc
 *.iws
 *.iml
 *.ipr
+
+resources/L_Systems
