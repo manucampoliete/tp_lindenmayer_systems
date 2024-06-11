@@ -31,20 +31,26 @@
   [t] (get t :previous-position))
 
 (defn move
-  "[t]: Returns a turtle that has moved away from the given turtle 1 unit in the direction of the turtle's angle, it doesn't update the previous position
-  [t n]: Returns a turtle that has moved away from the given turtle n units in the direction of the turtle's angle, it doesn't update the previous position"
+  "Returns a turtle that has moved away from the given turtle n units in the direction of the turtle's angle,
+  it doesn't update the previous position"
   ([t n] (create (vector2/add (position t) (vector2/rotate (vector2/create n 0) (angle t)))
                  (angle t)
-                 (previous-position t)))
-  ([t] (move t 1)))
+                 (previous-position t))))
+
+(defn fly
+  "Returns a turtle that has moved away from the given turtle n units in the direction of the turtle's angle,
+  it updates the previous position because the turtle can't breathe well while flying and gets disoriented"
+  ([t n] (create (vector2/add (position t) (vector2/rotate (vector2/create n 0) (angle t)))
+                 (angle t)
+                 (vector2/add (position t) (vector2/rotate (vector2/create n 0) (angle t))))))
 
 (defn rotate-left
   "Returns a turtle rotated to the left the given angle from the given turtle, it updates the previous position to the current position"
-  [t a] (create (position t) (- (angle t) a)))
+  [t a] (create (position t) (+ (angle t) a)))
 
 (defn rotate-right
   "Returns a turtle rotated to the right the given angle from the given turtle, it updates the previous position to the current position"
-  [t a] (create (position t) (+ (angle t) a)))
+  [t a] (create (position t) (- (angle t) a)))
 
 (defn step
   "Returns the current step of the turtle (a step with its start on the previous position and its end on the current position"

@@ -36,6 +36,10 @@
   ([v] (Math/sqrt (+ (* (x v) (x v))
                      (* (y v) (y v))))))
 
+(defn angle
+  "Returns the angle respecto del eje X"
+  [v] )
+
 (defn rotate
   "[]: Returns a vector2 with the coordinates (0 0)
   [v]: Returns the given vector
@@ -43,11 +47,19 @@
   [v angle]: Returns the rotation from the origin of coordinates by the given angle of the given vector-2"
   ([] (create))
   ([v] v)
-  ([v angle] (create (* (norm v) (Math/cos (Math/toRadians angle)))
-                     (* (norm v) (- (Math/sin (Math/toRadians angle)))))))
+  ([v angle] (create (+ (* (Math/cos (Math/toRadians angle)) (x v)) (* (Math/sin (Math/toRadians angle)) (y v)))
+                     (+ (- (* (Math/sin (Math/toRadians angle)) (x v))) (* (Math/cos (Math/toRadians angle)) (y v))))))
 
 (defn equal?
   "[v]: Returns true"
   ([v] true)
   ([v1 v2] (and (= (x v1) (x v2))
                 (= (y v1) (y v2)))))
+
+(defn min-vector-list
+  "Returns a vector with the min x coordinate and the y min coordinate of the given vectors list"
+  [lv] (create (apply min (for [v lv] (x v))) (apply min (for [v lv] (y v)))))
+
+(defn max-vector-list
+  "Returns a vector with the min x coordinate and the y min coordinate of the given vectors list"
+  [lv] (create (apply max (for [v lv] (x v))) (apply clojure.core/max (for [v lv] (y v)))))
