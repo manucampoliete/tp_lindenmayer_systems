@@ -1,0 +1,53 @@
+(ns LSystems.vector2)
+
+(defn create
+  "[]: Returns a vector2 with the coordinates (0 0)
+  [x y]: Returns a vector with the coordinates (x y)"
+  ([] (create 0 0))
+  ([_x _y] (list _x _y)))
+
+(defn x
+  "[v]: Returns the x coordinate of the given vector
+  [v n]: Returns a v based on the given v with its x coordinate set to the given one"
+  ([v] (first v))
+  ([v n] (create n (second v))))
+
+(defn y
+  "[v]: Returns the y coordinate of the given vectors
+  [v n]: Returns a v based on the given v with its y coordinate set to the given one"
+  ([v] (second v))
+  ([v n] (create (x v) n)))
+
+(defn add
+  "[]: Returns a vector2 with the coordinates (0 0)
+  [v]: Returns v
+  [v1 v2]: Returns the addition of the two vectors
+  [v1 v2 & more]: Returns the sum of the given vectors2"
+  ([] (create))
+  ([v] v)
+  ([v1 v2] (create (+ (x v1) (x v2))
+                   (+ (y v1) (y v2))))
+  ([v1 v2 & more] (reduce add (add v1 v2) more)))
+
+(defn norm
+  "[]: Returns a vector2 with the coordinates (0 0)
+  [v]: Returns the norm of the given vector2"
+  ([] (create))
+  ([v] (Math/sqrt (+ (* (x v) (x v))
+                     (* (y v) (y v))))))
+
+(defn rotate
+  "[]: Returns a vector2 with the coordinates (0 0)
+  [v]: Returns the given vector
+  [angle]: Returns a vector of coordinates (1 0) rotated by the given angle
+  [v angle]: Returns the rotation from the origin of coordinates by the given angle of the given vector-2"
+  ([] (create))
+  ([v] v)
+  ([v angle] (create (* (norm v) (Math/cos (Math/toRadians angle)))
+                     (* (norm v) (- (Math/sin (Math/toRadians angle)))))))
+
+(defn equal?
+  "[v]: Returns true"
+  ([v] true)
+  ([v1 v2] (and (= (x v1) (x v2))
+                (= (y v1) (y v2)))))
