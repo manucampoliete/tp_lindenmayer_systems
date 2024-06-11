@@ -1,30 +1,27 @@
 (ns tp-lindenmayer-systems.core
   (:require [clojure.string :as str]))
 
-(def RULES {:F "FF" :X "F+[[X]-X]-F[-FX]+X"})
-(def AXIOM "X")
-(def ANGLE 22.5)
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Vector2 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defn new-vector-2
+(defn vector-2
   "Returns a hash-map with like: :x x :y y"
   [x y]
   {:x x :y y})
 
 (defn get-x
-  "Returns the x coordinate of the given vector2"
+  "Returns the x coordinate of the given vector-2"
   [vector2]
   (get vector2 :x))
 
 (defn get-y
-  "Returns the y coordinate of the given vector2"
+  "Returns the y coordinate of the given vector-2"
   [vector2]
   (get vector2 :y))
 
 (defn add-vector-2
   "Returns the addition of the two vectors"
   [vec1 vec2]
-  (new-vector-2 (+ (get-x vec1) (get-x vec2))
+  (vector-2 (+ (get-x vec1) (get-x vec2))
                 (+ (get-y vec1) (get-y vec2))))
 
 (defn norm-vector-2
@@ -35,7 +32,7 @@
 (defn rotate-vector-2
   "Returns the rotation from the origin of coordinates by the given angle of the given vector-2"
   [vec-2 angle]
-  (new-vector-2 (* (norm-vector-2 vec-2) (Math/cos (Math/toRadians angle)))
+  (vector-2 (* (norm-vector-2 vec-2) (Math/cos (Math/toRadians angle)))
                 (* (norm-vector-2 vec-2) (- (Math/sin (Math/toRadians angle))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Step ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -63,7 +60,7 @@
 (defn turtle-move
   "Returns a turtle that has moved away from the given turtle the given units with the given turtle's angle"
   [turtle units]
-  (let [displacement (rotate-vector-2 (new-vector-2 units 0) (get turtle :angle))
+  (let [displacement (rotate-vector-2 (vector-2 units 0) (get turtle :angle))
         new-position (add-vector-2 (get turtle :position) displacement)]
     (new-turtle new-position (get turtle :angle))))
 
@@ -92,7 +89,7 @@
   "Returns the application of the rules to every character of the string n times"
   [rules string n]
   (if (zero? n) string
-                (system-processing rules (next-string rules string) (dec n))))
+                (recur rules (next-string rules string) (dec n))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Files (functions to process files) ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn file-processing
@@ -109,6 +106,8 @@
   [rules]
   (reduce merge (map #(apply key-value %) (map #(str/split % #" ") rules))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn list-update-first
   "Returns a list based on the given list, but with the first element replaced with the given one"
   [list elem]
@@ -133,22 +132,20 @@
                                    steps)
                                 angle))))
 
-
 (defn path
   "Returns a list of path based on the given L-system"
   [l-string turtles angle]
   (_path l-string turtles nil angle))
 
-
-(defn draw [processedSystem angle outputFile]
+(defn draw [processed-system angle output-file]
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Main ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn -main [input-file n output-file]
   (let [processed-file (file-processing input-file)
-        angle (first processed-file)
+        angle (Double/parseDouble (first processed-file))
         axiom (second processed-file)
-        rules (drop 2 processed-file)]))
-
-(assert (= "X" (system-processing RULES AXIOM 0)))
-(assert (= "F+[[X]-X]-F[-FX]+X" (system-processing RULES AXIOM 1)))
-(assert (= "FF+[[F+[[X]-X]-F[-FX]+X]-F+[[X]-X]-F[-FX]+X]-FF[-FFF+[[X]-X]-F[-FX]+X]+F+[[X]-X]-F[-FX]+X" (system-processing RULES AXIOM 2)))
+        rules (get-rules (drop 2 processed-file))]))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
