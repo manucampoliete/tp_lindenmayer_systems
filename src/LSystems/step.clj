@@ -11,12 +11,12 @@
 
 (defn start
   "[s]: Returns the start of the given step
-  [s v]: Returns a step based on the given one, but with its end set to the given one"
+  [s v]: Returns a step based on the given one, but with its start set to the given one"
   ([s] (get s :start))
   ([s v] (create v (get s :end))))
 
 (defn end
   "[s]: Returns the end of the given step
-  [s v]: Returns a step based on the given one, but with its start set to the given one"
+  [s v]: Returns a step based on the given one, but with its end set to the given one"
   ([s] (get s :end))
   ([s v] (create (start s) v)))

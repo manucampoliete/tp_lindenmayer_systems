@@ -36,14 +36,9 @@
   ([v] (Math/sqrt (+ (* (x v) (x v))
                      (* (y v) (y v))))))
 
-(defn angle
-  "Returns the angle respecto del eje X"
-  [v] )
-
 (defn rotate
   "[]: Returns a vector2 with the coordinates (0 0)
   [v]: Returns the given vector
-  [angle]: Returns a vector of coordinates (1 0) rotated by the given angle
   [v angle]: Returns the rotation from the origin of coordinates by the given angle of the given vector-2"
   ([] (create))
   ([v] v)
@@ -51,7 +46,9 @@
                      (+ (- (* (Math/sin (Math/toRadians angle)) (x v))) (* (Math/cos (Math/toRadians angle)) (y v))))))
 
 (defn equal?
-  "[v]: Returns true"
+  "[v]: Returns true because a vector2 is equal to himself :).
+  [v1 v2]: Returns true if both vector2s have the same coordinates.
+  In another case, false."
   ([v] true)
   ([v1 v2] (and (= (x v1) (x v2))
                 (= (y v1) (y v2)))))
@@ -62,4 +59,4 @@
 
 (defn max-vector-list
   "Returns a vector with the min x coordinate and the y min coordinate of the given vectors list"
-  [lv] (create (apply max (for [v lv] (x v))) (apply clojure.core/max (for [v lv] (y v)))))
+  [lv] (create (apply max (for [v lv] (x v))) (apply max (for [v lv] (y v)))))
